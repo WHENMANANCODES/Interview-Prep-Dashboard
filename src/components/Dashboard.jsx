@@ -1,40 +1,60 @@
-import StatsCard from "./Statscard"
-import problemsData from "../data/mockdata"
 
-const hardproblems = problemsData.filter((problem)=>{
-      return problem.difficulty === "hard";
-})
-
-//stores todays from system
-const today = new Date();
-
-// storing oneweekago date
-const oneWeekAgo = new Date();
-
-today.setHours(0, 0, 0, 0);
-oneWeekAgo.setHours(0, 0, 0, 0);
-
-oneWeekAgo.setDate(today.getDate()-6);
-//Note today.getDate() Gets the day number of the month. like today is 25 feb it will get 25
-
-const weeklyproblems = problemsData.filter((problem)=>{
-                  const problemdate = new Date(problem.date);
-                  problemdate.setHours(0, 0, 0, 0);
-                  if(problemdate>=oneWeekAgo && problemdate<= today){
-                    return true;
-                  }
-})
+import StatsCard from "./Statscard";
+import Navbar from "./Navbar";
+function Dashboard({ problems }) {
 
 
-function Dashboard() {
+  // hardproblem logic
+  const hardproblems = problems.filter((problem) => {
+    return problem.difficulty === "hard";
+  });
+
+  // weekly problems logic
+  const today = new Date();
+  const oneWeekAgo = new Date();
+
+  today.setHours(0, 0, 0, 0);
+  oneWeekAgo.setHours(0, 0, 0, 0);
+  oneWeekAgo.setDate(today.getDate() - 6);
+
+  const weeklyproblems = problems.filter((problem) => {
+    const problemdate = new Date(problem.date);
+    problemdate.setHours(0, 0, 0, 0);
+    return problemdate >= oneWeekAgo && problemdate <= today;
+  });
+
+
+// Streak logic
+   const solveddates = problems.map((problem)=>{
+         const d = new Date(problem.date);
+         d.setHours(0,0,0,0);
+         return d.getTime();  
+   });
+
+//Set = Duplicate remover
+// ... = Convert iterable into array
+// The includes() method returns true if a string contains a specified string.
+   const set = new Set(solveddates); 
+   const uniquedates = [...set];
+
+  let streak = 0;
+  let currentdate = new Date();
+  currentdate.setHours(0,0,0,0);
+  while(uniquedates.includes(currentdate.getTime())){
+      streak++;
+      currentdate.setDate(currentdate.getDate()-1);
+  }
+ 
   return (
+   <>
+    <Navbar />
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <StatsCard title="Total Problems" value = {problemsData.length}/>
+      <StatsCard title="Total Problems" value={problems.length} />
       <StatsCard title="Problems solved in last 7 days" value={weeklyproblems.length} />
-      <StatsCard title="Current Streak" value="7 days" />
+      <StatsCard title="Current Streak" value={`${streak} days`} />
       <StatsCard title="Hard Problems" value={hardproblems.length} />
     </div>
-  )
+    </>
+  );
 }
-
-export default Dashboard
+export default Dashboard;
