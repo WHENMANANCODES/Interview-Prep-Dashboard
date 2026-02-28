@@ -1,7 +1,7 @@
-
+import AddProblemForm from "./AddProblemForm";
 import StatsCard from "./Statscard";
 import Navbar from "./Navbar";
-function Dashboard({ problems }) {
+function Dashboard({ problems , setProblems}) {
 
 
   // hardproblem logic
@@ -54,6 +54,7 @@ function Dashboard({ problems }) {
       <StatsCard title="Current Streak" value={`${streak} days`} />
       <StatsCard title="Hard Problems" value={hardproblems.length} />
     </div>
+    <AddProblemForm problems={problems} setProblems={setProblems}></AddProblemForm>
     </>
   );
 }
