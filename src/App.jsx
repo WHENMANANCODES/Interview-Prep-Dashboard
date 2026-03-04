@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
-import AddProblemForm from "./components/AddProblemForm";
 function App(){
- 
+
+
+// ye reload karne par jo local storage mai problems padi hai unhe problems mai dal raha
 const [problems,setProblems] = useState(()=>{
   const savedproblems = localStorage.getItem("problems");
   if(savedproblems){
@@ -13,6 +14,7 @@ const [problems,setProblems] = useState(()=>{
   }
 })
 
+// ye problems ko local storage mai dal raha
 useEffect(()=>{
    localStorage.setItem("problems",JSON.stringify(problems));
 },[problems])

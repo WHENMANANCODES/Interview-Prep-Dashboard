@@ -2,10 +2,11 @@
 
 function AddProblemForm({problems,setProblems}){
 
-    const [name ,setName] = useState("");
-    const [level ,setLevel] = useState("Easy");
+    const [name ,setName]  = useState("");
+    const [level,setLevel] = useState("Easy");
     const [date,setDate]   = useState("");
     const [note,setNote]   = useState("");
+    const [topic,setTopic] = useState("");
 
     const handlesubmit = (e)=>{
            e.preventDefault();
@@ -19,7 +20,8 @@ function AddProblemForm({problems,setProblems}){
       name : name,
       level : level,
       date : date,
-      note : note
+      note : note,
+      topic : topic
     }
 
   setProblems([...problems,newProblem])
@@ -83,6 +85,21 @@ function AddProblemForm({problems,setProblems}){
         className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
       />
     </div>
+    
+    {/* Topic */}
+
+    <div>
+      <label className="block text-sm text-gray-600 mb-1">
+        Topic
+      </label>
+    <input
+        type="text"
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
 
     {/* Note */}
     <div>
