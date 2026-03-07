@@ -92,14 +92,37 @@ function AddProblemForm({problems,setProblems}){
       <label className="block text-sm text-gray-600 mb-1">
         Topic
       </label>
-    <input
-        type="text"
+
+    </div>
+    <select
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
         className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      />
-    </div>
-
+      >
+<option value="complexity">Time & Space Complexity</option>
+<option value="arrays">Arrays</option>
+<option value="strings">Strings</option>
+<option value="recursion">Recursion</option>
+<option value="backtracking">Backtracking</option>
+<option value="bit-manipulation">Bit Manipulation</option>
+<option value="linked-list">Linked List</option>
+<option value="stack">Stack</option>
+<option value="queue">Queue</option>
+<option value="hashing">Hashing</option>
+<option value="sorting">Sorting Algorithms</option>
+<option value="searching">Searching (Binary Search)</option>
+<option value="trees">Binary Trees</option>
+<option value="bst">Binary Search Trees</option>
+<option value="heaps">Heaps / Priority Queue</option>
+<option value="graphs">Graphs</option>
+<option value="greedy">Greedy Algorithms</option>
+<option value="dynamic-programming">Dynamic Programming</option>
+<option value="trie">Trie</option>
+<option value="dsu">Disjoint Set Union</option>
+<option value="segment-tree">Segment Tree</option>
+<option value="sliding-window">Sliding Window</option>
+<option value="two-pointers">Two Pointers</option>
+      </select>
 
     {/* Note */}
     <div>
