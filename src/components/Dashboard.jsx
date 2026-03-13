@@ -7,7 +7,7 @@ function Dashboard({ problems , setProblems}) {
   const navigate = useNavigate()
   // hardproblem logic
   const hardproblems = problems.filter((problem) => {
-    return problem.difficulty === "hard";
+    return problem.level === "Hard";
   });
 
   // weekly problems logic
@@ -20,6 +20,7 @@ function Dashboard({ problems , setProblems}) {
 
   const weeklyproblems = problems.filter((problem) => {
     const problemdate = new Date(problem.date);
+    
     problemdate.setHours(0, 0, 0, 0);
     return problemdate >= oneWeekAgo && problemdate <= today;
   });
@@ -52,8 +53,8 @@ function Dashboard({ problems , setProblems}) {
     <Navbar />
 
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <StatsCard onClick={()=>{navigate("/problems")}}       title="Total Problems" value={problems.length} />
-      <StatsCard onClick={()=>{navigate("weekly")}}  title="Problems solved in last 7 days" value={weeklyproblems.length} />
+      <StatsCard onClick={()=>{navigate("/problems")}} title="Total Problems" value={problems.length} />
+      <StatsCard onClick={()=>{navigate("/weekly")}}  title="Problems solved in last 7 days" value={weeklyproblems.length} />
       <StatsCard onClick={()=>{navigate("streak")}}  title="Current Streak" value={`${streak} days`} />
       <StatsCard onClick={()=>{navigate("hard")}}    title="Hard Problems" value={hardproblems.length} />
     </div>
