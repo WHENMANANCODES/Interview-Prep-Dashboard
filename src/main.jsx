@@ -23,7 +23,7 @@ const router =  createBrowserRouter([
   },
   {
     path:"/weekly",
-    element:<Weekly/>
+    element:<Weekly />
   },
   {
     path : "/hard",
