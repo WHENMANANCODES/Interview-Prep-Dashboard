@@ -45,16 +45,17 @@ This project allows users to **log solved problems, track difficulty, add notes,
 
 
 
-📂 Project Structure
+## 📂 Project Structure
 
+```
 Interview-Prep-Dashboard
 │
-├── public/                 # Static assets
+├── public/                    # Static assets
 │
 ├── src/
-│   ├── assets/             # Images or static resources
+│   ├── assets/                # Images or static resources
 │
-│   ├── components/         # Reusable UI components
+│   ├── components/            # Reusable UI components
 │   │   ├── AddProblemForm.jsx   # Form to add solved problems
 │   │   ├── Dashboard.jsx        # Main dashboard page
 │   │   ├── Hard.jsx             # Hard problems statistics
@@ -64,17 +65,19 @@ Interview-Prep-Dashboard
 │   │   ├── Streak.jsx           # Problem solving streak tracker
 │   │   └── Weekly.jsx           # Weekly problems solved chart
 │
-│   ├── data/               # Data storage / mock data
+│   ├── data/                  # Data storage / mock data
 │
-│   ├── App.jsx             # Main application component
-│   ├── main.jsx            # React entry point
-│   ├── App.css             # Global styles
-│   └── index.css           # Tailwind / base styles
+│   ├── App.jsx                # Main application component
+│   ├── main.jsx               # React entry point
+│   ├── App.css                # Global styles
+│   └── index.css              # Tailwind / base styles
 │
-├── index.html              # Root HTML file
-├── package.json            # Project dependencies
-├── vite.config.js          # Vite configuration
-└── README.md               # Project documentation
+├── index.html                 # Root HTML file
+├── package.json               # Project dependencies
+├── vite.config.js             # Vite configuration
+└── README.md                  # Project documentation
+```
+
 
 
 ##  Getting Started
@@ -129,11 +132,10 @@ This project is built to:
 
 **Manan Jain**
 
-B.Tech Student | Aspiring Software Developer
+B.Tech Student 3rd Year | Aspiring Software Developer
 Currently preparing for **Software Engineering Roles**
 
 GitHub:
 https://github.com/WHENMANANCODES
-
 
 ⭐ If you find this project useful, feel free to **star the repository**!
