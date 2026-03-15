@@ -1,6 +1,5 @@
 import React from "react";
-import { BarChart, CartesianGrid, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-
+import { PieChart,Pie,Cell,BarChart,Legend, CartesianGrid, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 function Weekly() {
 
   const problems = JSON.parse(localStorage.getItem("problems")) || [];
@@ -22,6 +21,25 @@ function Weekly() {
 
   });
 
+  // difficulty count
+let easy = 0;
+let medium = 0;
+let hard = 0;
+
+weeklyProblems.forEach((p) => {
+
+  if (p.level === "Easy") easy++;
+  else if (p.level === "Medium") medium++;
+  else if (p.level === "Hard") hard++;
+
+});
+
+// difficulty data
+const difficultyData = [
+  { name: "Easy", value: easy },
+  { name: "Medium", value: medium },
+  { name: "Hard", value: hard }
+];
 
   // Generate last 7 days
   const last7Days = [];
@@ -61,6 +79,7 @@ function Weekly() {
     day: d.toLocaleDateString("en-US", { weekday: "short" }),
     problems: problemsPerDay[idx]
   }));
+
 
 
   return (
@@ -151,8 +170,40 @@ function Weekly() {
 
       </div>
 
-    </div>
+      {/* Difficulty Distribution Chart*/}
+            <div className="mt-10 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
 
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Difficulty Distribution
+        </h2>
+
+<ResponsiveContainer width="100%" height={300}>
+      <PieChart>
+  <Pie
+    data={difficultyData}
+    dataKey="value"
+    cx="50%"
+    cy="50%"
+    outerRadius={80}
+    label
+  >
+    {difficultyData.map((entry,index) => (
+      //cell is used to define the color of each slice of the pie chart
+      <Cell
+        key={index}
+        fill={["green", "blue", "red"][index]}
+      />
+    ))}
+  </Pie>
+
+  <Tooltip />
+  <Legend />
+
+</PieChart>
+</ResponsiveContainer>
+
+    </div>
+  </div>
   );
 }
 
