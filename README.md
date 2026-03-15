@@ -1,16 +1,141 @@
-# React + Vite
+Interview Prep Dashboard 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and clean **DSA preparation tracker dashboard** built to help track daily problem-solving progress during technical interview preparation.
 
-Currently, two official plugins are available:
+This project allows users to **log solved problems, track difficulty, add notes, and visualize weekly progress** using charts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 Features
 
-## React Compiler
+* ✅ Add solved problems with:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+  * Problem name
+  * Difficulty level (Easy / Medium / Hard)
+  * Topic
+  * Date solved
+  * Personal notes
 
-## Expanding the ESLint configuration
+* 📊 **Weekly Problems Chart**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+  * Visualizes the number of problems solved in the **last 7 days**
+
+* 🗂 **Problem History**
+
+  * View all solved problems in a structured list
+
+* 📝 **Notes for Revision**
+
+  * Add insights or reminders for future revision
+
+* 💾 **Local Storage Support**
+
+  * Data persists even after refreshing the browser
+
+* 🎨 **Clean UI**
+
+  * Built with TailwindCSS for a minimal and responsive layout
+
+---
+
+## 🛠 Tech Stack
+
+* **React.js**
+* **JavaScript (ES6)**
+* **Tailwind CSS**
+* **Recharts** (for progress visualization)
+
+
+
+## 📂 Project Structure
+
+```
+Interview-Prep-Dashboard
+│
+├── public/                    # Static assets
+│
+├── src/
+│   ├── assets/                # Images or static resources
+│
+│   ├── components/            # Reusable UI components
+│   │   ├── AddProblemForm.jsx   # Form to add solved problems
+│   │   ├── Dashboard.jsx        # Main dashboard page
+│   │   ├── Hard.jsx             # Hard problems statistics
+│   │   ├── Navbar.jsx           # Navigation bar
+│   │   ├── Problemspage.jsx     # Page showing solved problems
+│   │   ├── StatsCard.jsx        # Statistics cards
+│   │   ├── Streak.jsx           # Problem solving streak tracker
+│   │   └── Weekly.jsx           # Weekly problems solved chart
+│
+│   ├── data/                  # Data storage / mock data
+│
+│   ├── App.jsx                # Main application component
+│   ├── main.jsx               # React entry point
+│   ├── App.css                # Global styles
+│   └── index.css              # Tailwind / base styles
+│
+├── index.html                 # Root HTML file
+├── package.json               # Project dependencies
+├── vite.config.js             # Vite configuration
+└── README.md                  # Project documentation
+```
+
+
+
+##  Getting Started
+
+### 1️⃣ Clone the repository
+
+```
+git clone https://github.com/WHENMANANCODES/Interview-Prep-Dashboard.git
+```
+
+### 2️⃣ Navigate to the project
+
+```
+cd Interview-Prep-Dashboard
+```
+
+### 3️⃣ Install dependencies
+
+```
+npm install
+```
+
+### 4️⃣ Run the development server
+
+```
+npm run dev
+```
+
+The app will start locally.
+
+---
+
+## Purpose of this Project
+
+This project is built to:
+
+* Track **DSA problem-solving consistency**
+* Improve **interview preparation discipline**
+* Practice **React development and data visualization**
+
+---
+
+## 🔮 Future Improvements
+
+* Add **problem filtering by topic**
+* Add **difficulty statistics**
+* Add **GitHub / LeetCode integration**
+* Add **monthly progress analytics**
+* Deploy the dashboard online
+
+## 👨‍💻 Author
+
+**Manan Jain**
+
+B.Tech Student 3rd Year | Aspiring Software Developer
+Currently preparing for **Software Engineering Roles**
+
+GitHub:
+https://github.com/WHENMANANCODES
+
+⭐ If you find this project useful, feel free to **star the repository**!
