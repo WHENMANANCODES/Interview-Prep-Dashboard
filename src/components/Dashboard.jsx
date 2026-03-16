@@ -29,23 +29,42 @@ function Dashboard({ problems , setProblems}) {
    const solveddates = problems.map((problem)=>{
          const d = new Date(problem.date);
          d.setHours(0,0,0,0);
-         return d.getTime();  
-   });
+         return d.getTime();  //getTime() converts a Date object into a number (timestamp).
+   });                        //That number represents: the number of milliseconds that have passed since January 1, 1970, 00:00:00 UTC.
 
 //Set = Duplicate remover
 // ... = Convert iterable into array
 // The includes() method returns true if a string contains a specified string.
    const set = new Set(solveddates); 
-   const uniquedates = [...set];
+   const uniquedates = [...set]; // hame unique dates dega taki streak calculate kar sake
 
   let streak = 0;
   let currentdate = new Date();
   currentdate.setHours(0,0,0,0);
+  
 
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate()-1)
+  yesterday.setHours(0,0,0,0);
+
+  const yesterdaysolved = uniquedates.includes(yesterday.getTime());
+  const todaysolved =     uniquedates.includes(today.getTime());
+  if(todaysolved){
   while(uniquedates.includes(currentdate.getTime())){
       streak++;
       currentdate.setDate(currentdate.getDate()-1);
   }
+}
+  else if(yesterdaysolved){
+  currentdate = new Date(yesterday);
+  while(uniquedates.includes(currentdate.getTime())){
+      streak++;
+      currentdate.setDate(currentdate.getDate()-1);
+  }
+}
+else{
+  streak = 0;
+}
 
   return (
    <> 
