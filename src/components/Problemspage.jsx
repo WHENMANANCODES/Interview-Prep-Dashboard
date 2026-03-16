@@ -75,7 +75,7 @@ function Problemspage() {
                 <XAxis dataKey="topic" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="count" fill="#3b82f6" />
+                <Bar dataKey="count" fill="black" />
               </BarChart>
             </ResponsiveContainer>
           </div>

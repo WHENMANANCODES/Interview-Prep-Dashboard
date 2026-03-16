@@ -34,12 +34,12 @@ function AddProblemForm({problems,setProblems}){
 
   }
     return(
- <> 
+ <div >
 
   <h2 className=" flex justify-center items-center text-center bg-amber-200 pt-2.5 font-semibold text-gray-800 mt-5 mb-4 border-1 rounded-full pb-2">
     Add The Problem below 
   </h2>
-<div className="bg-white p-6 rounded-xl shadow-md max-w-lg mx-auto border-2">
+<div className="bg-slate-800 border border-b-slate-100-700 p-6 rounded-xl shadow-lg max-w-lg mx-auto">
 
   <form onSubmit={handlesubmit} className="space-y-4 ">
 
@@ -147,7 +147,8 @@ function AddProblemForm({problems,setProblems}){
 
   </form>
 </div>
-  </>    
+</div>
+
     )
 }
 
