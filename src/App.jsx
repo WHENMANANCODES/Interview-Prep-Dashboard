@@ -21,9 +21,9 @@ useEffect(()=>{
 
 
 return(
-  <>
+  <div className="min-h-screen bg-blue-300 text-white">
     <Dashboard problems = {problems} setProblems={setProblems} />
-  </>
+  </div>
 )
 }
 export default App;
