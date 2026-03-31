@@ -3,10 +3,16 @@
 // When you want to add NeetCode 150 or Blind 75 later, you add ONE entry here.
 // SheetBrowser will import this and loop over it to render the sheet cards.
 
+
+// This file acts as a central registry for all DSA sheets in the project.
+// It stores metadata like sheet id, display name, total problem count, problem array reference, and UI color.
+// Components can import this registry and dynamically render all available sheets without hardcoding them one by one
+
 import striverProblems from "./striver";
 import neetcodeProblems from "./neetcode150";
 import top150InterviewProblems from "./Top150";
 import blind75Problems from "./Blind75Problems";
+
 const sheets = [
   {
     id: "striver",           // used as localStorage key prefix + for filtering
@@ -36,10 +42,10 @@ const sheets = [
     id: "Blind75",
     name: "Blind 75",
     totalProblems: 75,
-    problems: Blind75Problems,
+    problems: blind75Problems,
     color: "#7F77DD",
 },
-//Add more sheets here later — just copy paste this block and change the values
+//We can add more sheets here later — just copy paste this block and change the values
 ];
 
 export default sheets;
