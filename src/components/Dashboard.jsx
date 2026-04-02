@@ -170,7 +170,6 @@ function Dashboard({ problems, setProblems }) {
                 key={title}
             
                 className={`
-                  group cursor-pointer
                   rounded-2xl p-5
                   flex items-center justify-between
                   border border-white/10
@@ -178,8 +177,7 @@ function Dashboard({ problems, setProblems }) {
                   backdrop-blur-xl
                   shadow-[0_8px_30px_rgba(0,0,0,0.25)]
                   transition-all duration-300
-                  hover:-translate-y-1 hover:bg-white/[0.06]
-                  hover:shadow-2xl ${cls.border} ${cls.glow}
+                  
                 `}
               >
                 <div>
