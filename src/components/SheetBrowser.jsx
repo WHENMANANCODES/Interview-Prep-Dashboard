@@ -6,46 +6,37 @@ import ProblemTable from "./ProblemTable";
 import Navbar from "./Navbar";
 
 function SheetBrowser() {
-
   // ── WHICH SHEET IS SELECTED ───────────────────────────────────────────────
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
   const activeSheet = sheets.find((s) => s.id === selectedSheetId);
 
   // ── MODAL STATE ───────────────────────────────────────────────────────────
-  // Controls whether the "Log Problem" drawer is visible
   const [showModal, setShowModal] = useState(false);
 
   // ── FORM STATE ────────────────────────────────────────────────────────────
-  // Each field matches the shape of problems stored in localStorage
-  const [formName,       setFormName]       = useState("");
-  const [formLevel,      setFormLevel]      = useState("Easy");
-  const [formDate,       setFormDate]       = useState(
-    // Default to today's date in YYYY-MM-DD format
+  const [formName, setFormName] = useState("");
+  const [formLevel, setFormLevel] = useState("Easy");
+  const [formDate, setFormDate] = useState(
     new Date().toISOString().slice(0, 10)
   );
-  const [formNote,       setFormNote]       = useState("");
-  const [formTopic,      setFormTopic]      = useState("arrays");
-  const [formSource,     setFormSource]     = useState("contest"); // where they solved it
-  const [formPlatform,   setFormPlatform]   = useState("Codeforces");
-  const [formLink,       setFormLink]       = useState(""); // optional problem URL
+  const [formNote, setFormNote] = useState("");
+  const [formTopic, setFormTopic] = useState("arrays");
+  const [formSource, setFormSource] = useState("contest");
+  const [formPlatform, setFormPlatform] = useState("Codeforces");
+  const [formLink, setFormLink] = useState("");
 
   // ── SUCCESS FLASH ─────────────────────────────────────────────────────────
-  // Shows a brief "Added!" confirmation after submit
   const [showSuccess, setShowSuccess] = useState(false);
 
   // ── LOCALSTORAGE HELPERS ──────────────────────────────────────────────────
-  // Read saved problems fresh each render so count stays accurate
   const getSaved = () => JSON.parse(localStorage.getItem("problems")) || [];
 
   const getSolvedCount = (sheetId) =>
     getSaved().filter((p) => p.fromSheet === sheetId).length;
 
   // ── SUBMIT HANDLER ────────────────────────────────────────────────────────
-  // Builds a new problem object and appends it to localStorage.
-  // Uses the same shape as AddProblemForm so all pages (Dashboard, Weekly,
-  // Streak, Problemspage) can read it without any changes.
   const handleSubmit = (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
 
     if (!formName || !formDate) {
       alert("Problem name and date are required.");
@@ -55,22 +46,24 @@ function SheetBrowser() {
     const saved = getSaved();
 
     const newProblem = {
-      id:         Date.now(),          // unique numeric timestamp ID
-      name:       formName.trim(),
-      level:      formLevel,           // "Easy" | "Medium" | "Hard"
-      date:       formDate,            // "YYYY-MM-DD"
-      note:       formNote.trim(),
-      topic:      formTopic,
-      fromSheet:  activeSheet.id,      // ties it to the currently active sheet
-      source:     formSource,          // "contest" | "practice" | "interview"
-      platform:   formPlatform,        // "Codeforces", "LeetCode", etc.
-      link:       formLink.trim(),     // optional URL to the problem
+      id: Date.now(),
+      name: formName.trim(),
+      level: formLevel,
+      date: formDate,
+      note: formNote.trim(),
+      topic: formTopic,
+
+      // important change:
+      // manually logged problem ko kisi sheet se attach nahi karna
+      fromSheet: null,
+
+      source: formSource,
+      platform: formPlatform,
+      link: formLink.trim(),
     };
 
-    // Spread creates a new array — never mutate state/localStorage directly
     localStorage.setItem("problems", JSON.stringify([...saved, newProblem]));
 
-    // Show success flash, then close modal after 1.2s
     setShowSuccess(true);
     setTimeout(() => {
       setShowSuccess(false);
@@ -93,37 +86,42 @@ function SheetBrowser() {
 
   // ── TOPIC OPTIONS ─────────────────────────────────────────────────────────
   const topics = [
-    { value: "complexity",          label: "Time & Space Complexity"   },
-    { value: "arrays",              label: "Arrays"                    },
-    { value: "strings",             label: "Strings"                   },
-    { value: "recursion",           label: "Recursion"                 },
-    { value: "backtracking",        label: "Backtracking"              },
-    { value: "bit-manipulation",    label: "Bit Manipulation"          },
-    { value: "linked-list",         label: "Linked List"               },
-    { value: "stack",               label: "Stack"                     },
-    { value: "queue",               label: "Queue"                     },
-    { value: "hashing",             label: "Hashing"                   },
-    { value: "sorting",             label: "Sorting Algorithms"        },
-    { value: "searching",           label: "Searching (Binary Search)" },
-    { value: "trees",               label: "Binary Trees"              },
-    { value: "bst",                 label: "Binary Search Trees"       },
-    { value: "heaps",               label: "Heaps / Priority Queue"    },
-    { value: "graphs",              label: "Graphs"                    },
-    { value: "greedy",              label: "Greedy Algorithms"         },
-    { value: "dynamic-programming", label: "Dynamic Programming"       },
-    { value: "trie",                label: "Trie"                      },
-    { value: "dsu",                 label: "Disjoint Set Union"        },
-    { value: "segment-tree",        label: "Segment Tree"              },
-    { value: "sliding-window",      label: "Sliding Window"            },
-    { value: "two-pointers",        label: "Two Pointers"              },
+    { value: "complexity", label: "Time & Space Complexity" },
+    { value: "arrays", label: "Arrays" },
+    { value: "strings", label: "Strings" },
+    { value: "recursion", label: "Recursion" },
+    { value: "backtracking", label: "Backtracking" },
+    { value: "bit-manipulation", label: "Bit Manipulation" },
+    { value: "linked-list", label: "Linked List" },
+    { value: "stack", label: "Stack" },
+    { value: "queue", label: "Queue" },
+    { value: "hashing", label: "Hashing" },
+    { value: "sorting", label: "Sorting Algorithms" },
+    { value: "searching", label: "Searching (Binary Search)" },
+    { value: "trees", label: "Binary Trees" },
+    { value: "bst", label: "Binary Search Trees" },
+    { value: "heaps", label: "Heaps / Priority Queue" },
+    { value: "graphs", label: "Graphs" },
+    { value: "greedy", label: "Greedy Algorithms" },
+    { value: "dynamic-programming", label: "Dynamic Programming" },
+    { value: "trie", label: "Trie" },
+    { value: "dsu", label: "Disjoint Set Union" },
+    { value: "segment-tree", label: "Segment Tree" },
+    { value: "sliding-window", label: "Sliding Window" },
+    { value: "two-pointers", label: "Two Pointers" },
   ];
 
   const platforms = [
-    "Codeforces", "LeetCode", "CodeChef", "AtCoder",
-    "HackerRank", "GeeksForGeeks", "InterviewBit", "Other",
+    "Codeforces",
+    "LeetCode",
+    "CodeChef",
+    "AtCoder",
+    "HackerRank",
+    "GeeksForGeeks",
+    "InterviewBit",
+    "Other",
   ];
 
-  // Shared input class — DRY, used on every input/select in the form
   const inputCls = `
     w-full px-4 py-2.5 rounded-xl text-sm text-gray-100
     bg-white/[0.06] border border-white/10
@@ -132,16 +130,23 @@ function SheetBrowser() {
     focus:border-orange-500/30 transition duration-150
   `;
 
-  // Difficulty pill active/inactive styles
   const diffStyle = {
-    Easy:   { on: "bg-green-500/20 text-green-400 border-green-500/40",  off: "text-gray-500 border-white/10 hover:border-white/20" },
-    Medium: { on: "bg-amber-500/20 text-amber-400 border-amber-500/40",  off: "text-gray-500 border-white/10 hover:border-white/20" },
-    Hard:   { on: "bg-red-500/20   text-red-400   border-red-500/40",    off: "text-gray-500 border-white/10 hover:border-white/20" },
+    Easy: {
+      on: "bg-green-500/20 text-green-400 border-green-500/40",
+      off: "text-gray-500 border-white/10 hover:border-white/20",
+    },
+    Medium: {
+      on: "bg-amber-500/20 text-amber-400 border-amber-500/40",
+      off: "text-gray-500 border-white/10 hover:border-white/20",
+    },
+    Hard: {
+      on: "bg-red-500/20 text-red-400 border-red-500/40",
+      off: "text-gray-500 border-white/10 hover:border-white/20",
+    },
   };
 
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col relative overflow-hidden">
-
       {/* ── BACKGROUND GLOW ───────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-[28rem] h-[28rem] bg-indigo-500/10 blur-3xl rounded-full" />
@@ -152,7 +157,6 @@ function SheetBrowser() {
       <Navbar />
 
       <main className="relative z-10 flex-1 px-6 lg:px-10 py-10 max-w-7xl mx-auto w-full">
-
         {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
         <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
           <div>
@@ -167,8 +171,6 @@ function SheetBrowser() {
             </p>
           </div>
 
-          {/* ── LOG PROBLEM BUTTON ───────────────────────────────────────── */}
-          {/* Opens the modal — positioned in the header so it's always visible */}
           <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm
@@ -184,8 +186,7 @@ function SheetBrowser() {
         {/* ── CURRENT FOCUS STRIP ──────────────────────────────────────────── */}
         <div className="mb-8 rounded-3xl border border-white/10 bg-white/[0.04]
                         backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center
-                          sm:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-1">
                 Current Focus
@@ -197,12 +198,14 @@ function SheetBrowser() {
                 {getSolvedCount(activeSheet.id)} of {activeSheet.totalProblems} solved
               </p>
             </div>
+
             <span className="w-fit text-xs px-4 py-2 rounded-full border
                              bg-orange-500/10 text-orange-300 border-orange-400/20
                              shadow-[0_0_20px_rgba(251,146,60,0.08)]">
               {Math.round(
                 (getSolvedCount(activeSheet.id) / activeSheet.totalProblems) * 100
-              )}% complete
+              )}
+              % complete
             </span>
           </div>
         </div>
@@ -221,8 +224,7 @@ function SheetBrowser() {
         </div>
 
         {/* ── ACTIVE SHEET HEADER ───────────────────────────────────────────── */}
-        <div className="flex flex-col sm:flex-row sm:items-center
-                        sm:justify-between gap-3 mb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
           <div>
             <h2 className="text-xl font-semibold text-white">
               {activeSheet.name}
@@ -231,6 +233,7 @@ function SheetBrowser() {
               Explore problems and mark your progress sheet by sheet
             </p>
           </div>
+
           <span className="w-fit text-xs px-3.5 py-1.5 rounded-full border
                            bg-white/[0.04] text-slate-300 border-white/10">
             Total Problems: {activeSheet.totalProblems}
@@ -250,45 +253,38 @@ function SheetBrowser() {
         </div>
       </main>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          LOG PROBLEM MODAL
-          Rendered at the root level so it overlays everything cleanly.
-          Clicking the dark backdrop closes the modal (UX standard).
-      ══════════════════════════════════════════════════════════════════════ */}
+      {/* ── LOG PROBLEM MODAL ─────────────────────────────────────────────── */}
       {showModal && (
-        // ── BACKDROP ──────────────────────────────────────────────────────
-        // fixed + inset-0 covers the entire viewport regardless of scroll.
-        // z-50 puts it above all page content.
         <div
           className="fixed inset-0 z-50 flex items-center justify-center
                      bg-black/70 backdrop-blur-sm px-4"
-          onClick={() => { setShowModal(false); resetForm(); }} // click outside = close
+          onClick={() => {
+            setShowModal(false);
+            resetForm();
+          }}
         >
-          {/* ── MODAL PANEL ───────────────────────────────────────────────
-              stopPropagation prevents clicking inside the modal from
-              bubbling up to the backdrop and closing it accidentally.
-          ──────────────────────────────────────────────────────────────── */}
           <div
             className="relative w-full max-w-lg bg-[#0f172a] border border-white/10
                        rounded-3xl shadow-[0_24px_60px_rgba(0,0,0,0.6)]
                        max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-
             {/* ── MODAL HEADER ──────────────────────────────────────────── */}
-            <div className="flex items-center justify-between px-6 pt-6 pb-4
-                            border-b border-white/10">
+            <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-white/10">
               <div>
                 <h2 className="text-base font-semibold text-white">
                   Log a Problem
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Manually add a problem you solved outside the sheets
+                  Manually add a problem to your tracker
                 </p>
               </div>
-              {/* Close button */}
+
               <button
-                onClick={() => { setShowModal(false); resetForm(); }}
+                onClick={() => {
+                  setShowModal(false);
+                  resetForm();
+                }}
                 className="w-8 h-8 flex items-center justify-center
                            rounded-full bg-white/[0.06] hover:bg-white/10
                            text-slate-400 hover:text-white transition-all text-lg"
@@ -299,20 +295,18 @@ function SheetBrowser() {
 
             {/* ── FORM ──────────────────────────────────────────────────── */}
             <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
-
-              {/* Active sheet indicator — read-only, just for context */}
+              {/* manual log info strip */}
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl
                               bg-orange-500/10 border border-orange-500/20">
                 <span className="text-orange-400 text-xs">📌</span>
                 <span className="text-xs text-orange-300">
-                  Adding to: <span className="font-medium">{activeSheet.name}</span>
+                  This problem will be added to your tracker only
                 </span>
               </div>
 
               {/* ── PROBLEM NAME ────────────────────────────────────────── */}
               <div>
-                <label className="block text-xs font-medium text-slate-400
-                                  uppercase tracking-wider mb-2">
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                   Problem Name <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -326,21 +320,22 @@ function SheetBrowser() {
 
               {/* ── DIFFICULTY PILLS ────────────────────────────────────── */}
               <div>
-                <label className="block text-xs font-medium text-slate-400
-                                  uppercase tracking-wider mb-2">
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                   Difficulty
                 </label>
                 <div className="flex gap-2">
                   {["Easy", "Medium", "Hard"].map((lvl) => (
                     <button
                       key={lvl}
-                      type="button"           // never submit the form
+                      type="button"
                       onClick={() => setFormLevel(lvl)}
                       className={`flex-1 py-2 rounded-xl text-xs font-medium border
                                   transition-all duration-150 active:scale-95
-                                  ${formLevel === lvl
-                                    ? diffStyle[lvl].on
-                                    : diffStyle[lvl].off}`}
+                                  ${
+                                    formLevel === lvl
+                                      ? diffStyle[lvl].on
+                                      : diffStyle[lvl].off
+                                  }`}
                     >
                       {lvl}
                     </button>
@@ -348,13 +343,10 @@ function SheetBrowser() {
                 </div>
               </div>
 
-              {/* ── SOURCE + PLATFORM (side by side) ────────────────────── */}
+              {/* ── SOURCE + PLATFORM ───────────────────────────────────── */}
               <div className="grid grid-cols-2 gap-3">
-
-                {/* Where did they solve it? */}
                 <div>
-                  <label className="block text-xs font-medium text-slate-400
-                                    uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                     Source
                   </label>
                   <select
@@ -370,10 +362,8 @@ function SheetBrowser() {
                   </select>
                 </div>
 
-                {/* Which platform? */}
                 <div>
-                  <label className="block text-xs font-medium text-slate-400
-                                    uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                     Platform
                   </label>
                   <select
@@ -382,19 +372,18 @@ function SheetBrowser() {
                     className={inputCls}
                   >
                     {platforms.map((p) => (
-                      <option key={p} value={p}>{p}</option>
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
                     ))}
                   </select>
                 </div>
-
               </div>
 
-              {/* ── DATE + TOPIC (side by side) ─────────────────────────── */}
+              {/* ── DATE + TOPIC ────────────────────────────────────────── */}
               <div className="grid grid-cols-2 gap-3">
-
                 <div>
-                  <label className="block text-xs font-medium text-slate-400
-                                    uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                     Date <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -406,33 +395,34 @@ function SheetBrowser() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-400
-                                    uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                     Topic
                   </label>
-                  {/* value= + onChange= = controlled select (React owns the value) */}
                   <select
                     value={formTopic}
                     onChange={(e) => setFormTopic(e.target.value)}
                     className={inputCls}
                   >
                     {topics.map((t) => (
-                      <option key={t.value} value={t.value}
-                              className="bg-slate-900">
+                      <option
+                        key={t.value}
+                        value={t.value}
+                        className="bg-slate-900"
+                      >
                         {t.label}
                       </option>
                     ))}
                   </select>
                 </div>
-
               </div>
 
-              {/* ── PROBLEM LINK (optional) ──────────────────────────────── */}
+              {/* ── PROBLEM LINK ────────────────────────────────────────── */}
               <div>
-                <label className="block text-xs font-medium text-slate-400
-                                  uppercase tracking-wider mb-2">
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                   Problem Link
-                  <span className="text-slate-600 normal-case ml-1">(optional)</span>
+                  <span className="text-slate-600 normal-case ml-1">
+                    (optional)
+                  </span>
                 </label>
                 <input
                   type="url"
@@ -445,10 +435,11 @@ function SheetBrowser() {
 
               {/* ── NOTE ───────────────────────────────────────────────── */}
               <div>
-                <label className="block text-xs font-medium text-slate-400
-                                  uppercase tracking-wider mb-2">
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                   Note
-                  <span className="text-slate-600 normal-case ml-1">(optional)</span>
+                  <span className="text-slate-600 normal-case ml-1">
+                    (optional)
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -467,15 +458,12 @@ function SheetBrowser() {
                            transition-all duration-150 active:scale-[0.98]
                            shadow-[0_0_20px_rgba(249,115,22,0.25)]"
               >
-                {/* Shows "Added! ✓" briefly after submit, then resets */}
                 {showSuccess ? "Added! ✓" : "Log Problem →"}
               </button>
-
             </form>
           </div>
         </div>
       )}
-
     </div>
   );
 }

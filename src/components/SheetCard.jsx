@@ -1,8 +1,8 @@
-// src/components/SheetCard.jsx
+// src/components/SheetCard.jsxa
 // WHAT THIS DOES:
 // Displays one sheet as a clickable card — name, problem count, progress bar.
 // Pure presentational component — no state, no localStorage, no logic.
-// SheetBrowser will pass all data as props and handle the click.
+// SheetBrows er will pass all data as props and handle the click.
 
 function SheetCard({ sheet, solvedCount, isSelected, onClick }) {
   const percentage = Math.round((solvedCount / sheet.totalProblems) * 100);
