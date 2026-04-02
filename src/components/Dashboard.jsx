@@ -168,7 +168,7 @@ function Dashboard({ problems, setProblems }) {
             return (
               <div
                 key={title}
-                onClick={() => navigate(route)}
+            
                 className={`
                   group cursor-pointer
                   rounded-2xl p-5
@@ -180,7 +180,6 @@ function Dashboard({ problems, setProblems }) {
                   transition-all duration-300
                   hover:-translate-y-1 hover:bg-white/[0.06]
                   hover:shadow-2xl ${cls.border} ${cls.glow}
-                  active:scale-[0.98]
                 `}
               >
                 <div>
@@ -191,7 +190,7 @@ function Dashboard({ problems, setProblems }) {
                     {value}
                   </p>
                   <p className="text-xs text-slate-400 mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    View details →
+           
                   </p>
                 </div>
 
