@@ -222,11 +222,6 @@ function Streak() {
 
             <p className="relative z-10 text-xs text-slate-500 mt-3">{streakMessage}</p>
 
-            {stats.streak > 0 && (
-              <p className="relative z-10 text-xs text-rose-300 mt-2">
-                Solve today to keep it alive
-              </p>
-            )}
 
             {!isBest && stats.longestStreak > 0 && (
               <div className="relative z-10 mt-5 pt-4 border-t border-white/10">
