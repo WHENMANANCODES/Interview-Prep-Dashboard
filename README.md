@@ -73,21 +73,21 @@ The goal is to make DSA preparation **data-driven, consistent, and motivating**.
 
 ### 🧠 Dashboard
 <img width="3839" height="2145" alt="Screenshot 2026-04-02 121745" src="https://github.com/user-attachments/assets/3adb27db-d7e3-4528-83e7-78233e7b6239" />
-)
+
 
 ---
 
 ### 📘 Sheets Page
 
 <img width="3833" height="2136" alt="Screenshot 2026-04-02 122259" src="https://github.com/user-attachments/assets/77e5b55f-872f-478c-aa55-674e8861bc9f" />
-)
+
 
 ---
 
 ### 📊 Weekly Analytics
 <img width="3837" height="2142" alt="Screenshot 2026-04-02 122324" src="https://github.com/user-attachments/assets/56806bb4-5604-40bf-b6f8-87efba6943b5" />
 
-)
+
 
 ---
 
@@ -103,7 +103,7 @@ The goal is to make DSA preparation **data-driven, consistent, and motivating**.
 
 <img width="3837" height="2143" alt="Screenshot 2026-04-02 123204" src="https://github.com/user-attachments/assets/7b7078f0-7ef3-48d2-8a5b-936531698be9" />
 
-)
+
 
 ---
 
