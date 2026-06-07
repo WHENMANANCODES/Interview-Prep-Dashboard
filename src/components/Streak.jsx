@@ -1,11 +1,21 @@
 import { useMemo } from "react";
 import Navbar from "./Navbar";
-
+import { getProblems } from "../services/api";
+import { useState,useEffect } from "react";
 function Streak() {
-  const problems = useMemo(
-    () => JSON.parse(localStorage.getItem("problems")) || [],
-    []
-  );
+const [problems, setProblems] = useState([]);
+
+useEffect(() => {
+  const fetchProblems = async () => {
+    try {
+      const data = await getProblems();
+      setProblems(data);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+  fetchProblems();
+}, []);
 
   const dayKey = (d) => {
     const copy = new Date(d);

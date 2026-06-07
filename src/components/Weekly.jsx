@@ -1,5 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
+import { useEffect, useState } from "react";
+import { getProblems } from "../services/api";
 import {
   PieChart, Pie, Cell, BarChart, Legend,
   CartesianGrid, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer
@@ -7,7 +9,19 @@ import {
 
 function Weekly() {
 
-  const problems = JSON.parse(localStorage.getItem("problems")) || [];
+  const [problems, setProblems] = useState([]);
+
+useEffect(() => {
+  const fetchProblems = async () => {
+    try {
+      const data = await getProblems();
+      setProblems(data);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+  fetchProblems();
+}, []);
 
   const today = new Date();
   const oneWeekAgo = new Date();

@@ -1,13 +1,14 @@
 // src/components/SheetBrowser.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getProblems, addProblem } from "../services/api";
 import sheets from "../data/sheets";
 import SheetCard from "./SheetCard";
 import ProblemTable from "./ProblemTable";
 import Navbar from "./Navbar";
-
-function SheetBrowser() {
+function SheetBrowser({onRefresh}) {
   // ── WHICH SHEET IS SELECTED ───────────────────────────────────────────────
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
+  const [problems, setProblems] = useState([]);
   const activeSheet = sheets.find((s) => s.id === selectedSheetId);
 
   // ── MODAL STATE ───────────────────────────────────────────────────────────
@@ -28,49 +29,58 @@ function SheetBrowser() {
   // ── SUCCESS FLASH ─────────────────────────────────────────────────────────
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // ── LOCALSTORAGE HELPERS ──────────────────────────────────────────────────
-  const getSaved = () => JSON.parse(localStorage.getItem("problems")) || [];
+  // ── getting data  ──────────────────────────────────────────────────
+useEffect(() => {
+  const fetch = async () => {
+    try {
+      const data = await getProblems();
+      setProblems(data);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+  fetch();
+}, []);
 
   const getSolvedCount = (sheetId) =>
-    getSaved().filter((p) => p.fromSheet === sheetId).length;
+  problems.filter((p) => p.fromSheet === sheetId).length;
 
   // ── SUBMIT HANDLER ────────────────────────────────────────────────────────
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!formName || !formDate) {
+    alert("Problem name and date are required.");
+    return;
+  }
 
-    if (!formName || !formDate) {
-      alert("Problem name and date are required.");
-      return;
-    }
-
-    const saved = getSaved();
-
+  try {
     const newProblem = {
-      id: Date.now(),
       name: formName.trim(),
       level: formLevel,
       date: formDate,
       note: formNote.trim(),
       topic: formTopic,
-
-      // important change:
-      // manually logged problem ko kisi sheet se attach nahi karna
       fromSheet: null,
-
       source: formSource,
       platform: formPlatform,
       link: formLink.trim(),
     };
-
-    localStorage.setItem("problems", JSON.stringify([...saved, newProblem]));
-
+    
+    await addProblem(newProblem);
+    setProblems([...problems, newProblem]);
+    if(onRefresh) await onRefresh();
     setShowSuccess(true);
     setTimeout(() => {
       setShowSuccess(false);
       setShowModal(false);
       resetForm();
     }, 1200);
-  };
+  } catch (err) {
+    alert("Failed to add problem");
+  }
+};
+
+
 
   // ── RESET FORM ────────────────────────────────────────────────────────────
   const resetForm = () => {

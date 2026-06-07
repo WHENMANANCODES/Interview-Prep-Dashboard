@@ -1,38 +1,48 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { addProblem, deleteProblem, getProblems } from "../services/api";
 
 function ProblemTable({ problems }) {
-
-  const getSolvedIds = () => {
-    const saved = JSON.parse(localStorage.getItem("problems")) || [];
-    return new Set(saved.map((p) => p.sheetProblemId).filter(Boolean));
-  };
-
-  const [solvedIds, setSolvedIds] = useState(getSolvedIds);
+  const [solvedIds, setSolvedIds] = useState(new Set());
   const [selectedTopic, setSelectedTopic] = useState("All");
   const [search, setSearch] = useState("");
+  const topics = [
+  "All",
+  ...new Set(problems.map((p) => p.topic))
+];
+const filtered = problems.filter((p) => {
+  const topicMatch =
+    selectedTopic === "All" ||
+    p.topic === selectedTopic;
 
-  const topics = ["All", ...new Set(problems.map((p) => p.topic))];
+  const searchMatch =
+    p.name.toLowerCase().includes(search.toLowerCase());
 
-  const filtered = problems.filter((p) => {
-    const topicMatch = selectedTopic === "All" || p.topic === selectedTopic;
-    const searchMatch = p.name.toLowerCase().includes(search.toLowerCase());
-    return topicMatch && searchMatch;
-  });
+  return topicMatch && searchMatch;
+});
+  // Load solved IDs on mount
 
-  const toggleSolved = (problem) => {
-    const saved = JSON.parse(localStorage.getItem("problems")) || [];
+useEffect(() => {
+    const loadSolved = async () => {
+      const all = await getProblems();
+      const ids = new Set(all.map(p => p.sheetProblemId).filter(Boolean));
+      setSolvedIds(ids);
+    };
+    loadSolved();
+  }, [problems]); // Refetch when problems change
 
+  const toggleSolved = async (problem) => {
     if (solvedIds.has(problem.sheetProblemId)) {
-      const updated = saved.filter(
-        (p) => p.sheetProblemId !== problem.sheetProblemId
-      );
-      localStorage.setItem("problems", JSON.stringify(updated));
+      // Find and delete from DB
+      const all = await getProblems();
+      const found = all.find(p => p.sheetProblemId === problem.sheetProblemId);
+      if (found) await deleteProblem(found._id);
+      
       const newIds = new Set(solvedIds);
       newIds.delete(problem.sheetProblemId);
       setSolvedIds(newIds);
     } else {
+      // Add to DB
       const newEntry = {
-        id: Date.now(),
         sheetProblemId: problem.sheetProblemId,
         name: problem.name,
         level: problem.level,
@@ -41,8 +51,8 @@ function ProblemTable({ problems }) {
         note: "",
         fromSheet: problem.fromSheet,
       };
-      const updated = [...saved, newEntry];
-      localStorage.setItem("problems", JSON.stringify(updated));
+      await addProblem(newEntry);
+      
       const newIds = new Set(solvedIds);
       newIds.add(problem.sheetProblemId);
       setSolvedIds(newIds);

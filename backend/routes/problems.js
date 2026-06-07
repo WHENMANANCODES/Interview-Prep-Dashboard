@@ -14,18 +14,29 @@ router.get('/', async (req, res) => {
 
 // POST new problem
 router.post('/', async (req, res) => {
+  console.log("BODY RECEIVED:");
+  console.log(req.body);
+
   const problem = new Problem({
     name: req.body.name,
     level: req.body.level,
     date: req.body.date,
-    note: req.body.note
+    note: req.body.note,
+    topic: req.body.topic,
+    sheetProblemId: req.body.sheetProblemId,
+    fromSheet: req.body.fromSheet
   });
 
   try {
     const newProblem = await problem.save();
     res.status(201).json(newProblem);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.log("ERROR:");
+    console.log(err);
+
+    res.status(400).json({
+      message: err.message
+    });
   }
 });
 

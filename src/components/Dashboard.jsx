@@ -99,9 +99,11 @@ function Dashboard({ problems, setProblems }) {
   });
 
   // recent activity — last 5 problems solved, newest first
-  const recentProblems = [...problems]
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 5);
+const recentProblems = [...problems]
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  .slice(0, 5);
+console.log("All problems:", problems);
+console.log("Recent problems:", recentProblems);
 
   // Accent color map → Tailwind classes per card
   const accentClasses = {
@@ -268,7 +270,7 @@ function Dashboard({ problems, setProblems }) {
               <div className="flex flex-col gap-3">
                 {recentProblems.map((problem) => (
                   <div
-                    key={problem.id}
+                    key={problem._id}
                     className="flex items-center justify-between rounded-2xl px-4 py-3 border border-white/5 bg-white/[0.025] hover:bg-white/[0.05] transition-all duration-300"
                   >
                     <div>
@@ -276,7 +278,7 @@ function Dashboard({ problems, setProblems }) {
                         {problem.name}
                       </p>
                       <p className="text-xs text-slate-400 capitalize mt-1">
-                        {problem.topic} · {problem.date}
+                        {problem.topic} · {new Date(problem.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                       </p>
                     </div>
 

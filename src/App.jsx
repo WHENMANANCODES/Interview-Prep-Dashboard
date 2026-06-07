@@ -1,29 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-function App(){
+import SheetBrowser from "./components/SheetBrowser";
+import Problemspage from "./components/Problemspage";
+import Streak from "./components/Streak";
+import Weekly from "./components/Weekly";
+import Hard from "./components/Hard";
+import { getProblems } from "./services/api";
 
+function App() {
+  const [problems, setProblems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-// ye reload karne par jo local storage mai problems padi hai unhe problems mai dal raha
-const [problems,setProblems] = useState(()=>{
-  const savedproblems = localStorage.getItem("problems");
-  if(savedproblems){
-    return JSON.parse(savedproblems);
-  }
-  else{
-    return [];
-  }
-})
+  const fetchProblems = useCallback(async () => {
+    try {
+      const data = await getProblems();
+      setProblems(data);
+    } catch (err) {
+      console.error("Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-// ye problems ko local storage mai dal raha
-useEffect(()=>{
-   localStorage.setItem("problems",JSON.stringify(problems));
-},[problems])
+  useEffect(() => {
+    fetchProblems();
+  }, [fetchProblems]);
 
+  const router = createBrowserRouter([
+    { path: "/", element: <Dashboard problems={problems} onRefresh={fetchProblems} /> },
+    { path: "/sheets", element: <SheetBrowser onRefresh={fetchProblems} /> },
+    { path: "/problems", element: <Problemspage /> },
+    { path: "/streak", element: <Streak /> },
+    { path: "/weekly", element: <Weekly /> },
+    { path: "/hard", element: <Hard /> },
+  ]);
 
-return(
-  <div className="min-h-screen bg-blue-300 text-white">
-    <Dashboard problems = {problems} setProblems={setProblems} />
-  </div>
-)
+  if (loading) return <div className="text-white p-10">Loading...</div>;
+
+  return <RouterProvider router={router} />;
 }
+
 export default App;

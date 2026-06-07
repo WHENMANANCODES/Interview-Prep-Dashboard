@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getProblems, deleteProblem } from "../services/api";
 import Navbar from "./Navbar";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip,
@@ -9,10 +10,17 @@ function Problemspage() {
 
   const [problems, setProblems] = useState([]);
 
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("problems")) || [];
-    setProblems(saved);
-  }, []);
+useEffect(() => {
+  const fetchProblems = async () => {
+    try {
+      const data = await getProblems();
+      setProblems(data);
+    } catch (err) {
+      console.error("Error fetching problems:", err);
+    }
+  };
+  fetchProblems();
+}, []);
 
   const sortedProblems = [...problems].sort((a, b) => {
     return new Date(b.date) - new Date(a.date);
@@ -30,11 +38,15 @@ function Problemspage() {
     count: topicCount[key],
   }));
 
-  const handleDelete = (indexToDelete) => {
-    const updated = sortedProblems.filter((_, index) => index !== indexToDelete);
-    setProblems(updated);
-    localStorage.setItem("problems", JSON.stringify(updated));
-  };
+const handleDelete = async (id) => {
+  try {
+    await deleteProblem(id);
+    setProblems(problems.filter(p => p._id !== id));
+  } catch (err) {
+    alert("Failed to delete");
+    console.error(err);
+  }
+};
 
   const difficultyStyle = (level) => {
     if (level === "Easy")   return "bg-emerald-500/10 text-emerald-300 border border-emerald-400/20";
@@ -171,15 +183,12 @@ function Problemspage() {
                     </td>
 
                     <td className="px-5 py-4">
-                      <button
-                        onClick={() => handleDelete(index)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium
-                                   text-rose-300 border border-rose-400/20
-                                   bg-rose-500/10 hover:bg-rose-500/20
-                                   transition-all duration-200"
-                      >
-                        Delete
-                      </button>
+                  <button
+                      onClick={() => handleDelete(problem._id)}
+                      className="px-3 py-1 text-xs text-red-400 bg-red-500/10 border border-red-400/20 rounded-full hover:bg-red-500/20 transition"
+               >
+                            Delete
+                  </button>
                     </td>
                   </tr>
                 ))}
