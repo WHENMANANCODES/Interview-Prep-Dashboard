@@ -18,5 +18,7 @@ app.get('/api/test', (req, res) => {
 
 app.use('/api/problems', require('./routes/problems'));
 
+app.use('/api/auth', require('./routes/authroutes'));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
+
