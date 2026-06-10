@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://interview-prep-dashboard-2.onrender.com/api/problems';
+const API_URL =  "http://localhost:5000/api/problems";
 
 export const getProblems = async () => {
   const response = await axios.get(API_URL);

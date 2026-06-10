@@ -6,6 +6,8 @@ import Problemspage from "./components/Problemspage";
 import Streak from "./components/Streak";
 import Weekly from "./components/Weekly";
 import Hard from "./components/Hard";
+import Login from "./components/Login"; //       1. Login Component Import kiya
+import Register from "./components/Register"; // 2. Register Component Import kiya
 import { getProblems } from "./services/api";
 
 function App() {
@@ -27,8 +29,25 @@ function App() {
     fetchProblems();
   }, [fetchProblems]);
 
+  // 🎯 2. Router Configurations ko Update kiya
   const router = createBrowserRouter([
-    { path: "/", element: <Dashboard problems={problems} onRefresh={fetchProblems} /> },
+  {
+    path : "/register",
+    element : <Register /> // Register route add kar diya
+
+  },
+    { 
+      path: "/", 
+      element: <Login /> // Default route par ab sabse pehle Login screen dikhegi!
+    },
+    { 
+      path: "/login", 
+      element: <Login /> // Agar koi manually /login par jaye tab bhi
+    },
+    { 
+      path: "/dashboard", 
+      element: <Dashboard problems={problems} onRefresh={fetchProblems} /> // Dashboard ka path badal kar /dashboard kar diya
+    },
     { path: "/sheets", element: <SheetBrowser onRefresh={fetchProblems} /> },
     { path: "/problems", element: <Problemspage /> },
     { path: "/streak", element: <Streak /> },

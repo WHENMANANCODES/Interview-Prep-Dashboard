@@ -1,15 +1,23 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom"; // 🎯 useNavigate add kiya
+import authService from "../services/authService"; // 🎯 authService import kiya
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate(); // 🎯 navigation handle karne ke liye
+
+  // Logout handler handler function
+  const handleLogout = () => {
+    authService.logout(); // LocalStorage se user key delete hogi
+    console.log("✓ Session destroyed. Redirecting...");
+    navigate("/login"); // User wapas login screen par redirect hoga
+  };
 
   const links = [
-    { path: "/",         label: "Dashboard" },
-    { path: "/sheets",   label: "Sheets"    },
-    { path: "/problems", label: "Problems"  },
-    { path: "/weekly",   label: "Weekly"    },
-    { path: "/streak",   label: "Streak"    },
-    // { path: "/AI",       label: "AI Coach"   },
+    { path: "/dashboard", label: "Dashboard" },
+    { path: "/sheets",    label: "Sheets"    },
+    { path: "/problems",  label: "Problems"  },
+    { path: "/weekly",    label: "Weekly"    },
+    { path: "/streak",    label: "Streak"    },
   ];
 
   return (
@@ -23,7 +31,7 @@ function Navbar() {
         shadow-[0_8px_30px_rgba(0,0,0,0.25)]
       "
     >
-      {/* Logo */}
+      {/* Left side: Logo & Title */}
       <div className="flex items-center gap-3">
         <div
           className="
@@ -49,29 +57,48 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Nav links */}
-      <div className="flex items-center gap-1 p-1 rounded-2xl bg-white/[0.03] border border-white/10">
-        {links.map(({ path, label }) => {
-          const isActive = location.pathname === path;
+      {/* Right side: Nav links & Logout Button */}
+      <div className="flex items-center gap-4"> {/* Container banaya links aur button ke liye */}
+        
+        {/* Nav links */}
+        <div className="flex items-center gap-1 p-1 rounded-2xl bg-white/[0.03] border border-white/10">
+          {links.map(({ path, label }) => {
+            const isActive = location.pathname === path;
 
-          return (
-            <Link
-              key={path}
-              to={path}
-              className={`
-                px-4 py-2 rounded-xl text-sm font-medium
-                transition-all duration-300
-                ${
-                  isActive
-                    ? "bg-gradient-to-r from-indigo-500/20 to-cyan-400/10 text-white border border-indigo-400/20 shadow-md shadow-indigo-500/10"
-                    : "text-slate-400 hover:text-white hover:bg-white/[0.06]"
-                }
-              `}
-            >
-              {label}
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={path}
+                to={path}
+                className={`
+                  px-4 py-2 rounded-xl text-sm font-medium
+                  transition-all duration-300
+                  ${
+                    isActive
+                      ? "bg-gradient-to-r from-indigo-500/20 to-cyan-400/10 text-white border border-indigo-400/20 shadow-md shadow-indigo-500/10"
+                      : "text-slate-400 hover:text-white hover:bg-white/[0.06]"
+                  }
+                `}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* 🎯 Real Red Glowing Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="
+            px-4 py-1.5 rounded-xl text-sm font-semibold
+            text-red-400 border border-red-500/20 bg-red-500/10
+            transition-all duration-300
+            hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)]
+            focus:outline-none focus:ring-2 focus:ring-red-500/40
+          "
+        >
+          Logout
+        </button>
+
       </div>
     </nav>
   );
