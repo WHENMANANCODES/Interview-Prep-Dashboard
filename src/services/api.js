@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || "https://interview-prep-dashboard-2.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://preptrack-backend-am0b.onrender.com";
 const API_URL = `${BASE_URL}/api/problems`;
 
 export const getProblems = async () => {
