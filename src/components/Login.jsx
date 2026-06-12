@@ -30,12 +30,12 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 font-sans">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md">
+    <div className="flex min-h-screen items-center justify-center bg-gray-900 px-4 font-sans">
+      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md bo">
         
         {/* Header */}
         <div className="mb-6 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">Welcome Back</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">WELCOME</h2>
           <p className="mt-2 text-sm text-gray-600">Log in to track your DSA & Interview Prep</p>
         </div>
 

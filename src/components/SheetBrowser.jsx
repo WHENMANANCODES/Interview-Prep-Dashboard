@@ -1,88 +1,63 @@
 // src/components/SheetBrowser.jsx
-import { useState, useEffect } from "react";
-import { getProblems, addProblem } from "../services/api";
+import { useState } from "react"; // useEffect hata diya
+import { addProblem } from "../services/api"; // getProblems hata diya
 import sheets from "../data/sheets";
 import SheetCard from "./SheetCard";
 import ProblemTable from "./ProblemTable";
 import Navbar from "./Navbar";
-function SheetBrowser({onRefresh}) {
-  // ── WHICH SHEET IS SELECTED ───────────────────────────────────────────────
+
+function SheetBrowser({ problems, onRefresh }) { // ✅ problems prop add kiya
   const [selectedSheetId, setSelectedSheetId] = useState(sheets[0].id);
-  const [problems, setProblems] = useState([]);
   const activeSheet = sheets.find((s) => s.id === selectedSheetId);
 
-  // ── MODAL STATE ───────────────────────────────────────────────────────────
   const [showModal, setShowModal] = useState(false);
-
-  // ── FORM STATE ────────────────────────────────────────────────────────────
   const [formName, setFormName] = useState("");
   const [formLevel, setFormLevel] = useState("Easy");
-  const [formDate, setFormDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
+  const [formDate, setFormDate] = useState(new Date().toISOString().slice(0, 10));
   const [formNote, setFormNote] = useState("");
   const [formTopic, setFormTopic] = useState("arrays");
   const [formSource, setFormSource] = useState("contest");
   const [formPlatform, setFormPlatform] = useState("Codeforces");
   const [formLink, setFormLink] = useState("");
-
-  // ── SUCCESS FLASH ─────────────────────────────────────────────────────────
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // ── getting data  ──────────────────────────────────────────────────
-useEffect(() => {
-  const fetch = async () => {
+  // ✅ Ab App.jsx ke problems prop se count hoga
+  const getSolvedCount = (sheetId) =>
+    problems.filter((p) => p.fromSheet === sheetId).length;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formName || !formDate) {
+      alert("Problem name and date are required.");
+      return;
+    }
+
     try {
-      const data = await getProblems();
-      setProblems(data);
+      const newProblem = {
+        name: formName.trim(),
+        level: formLevel,
+        date: formDate,
+        note: formNote.trim(),
+        topic: formTopic,
+        fromSheet: null,
+        source: formSource,
+        platform: formPlatform,
+        link: formLink.trim(),
+      };
+
+      await addProblem(newProblem);
+      if (onRefresh) await onRefresh(); // ✅ App.jsx se fresh data
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        setShowModal(false);
+        resetForm();
+      }, 1200);
     } catch (err) {
-      console.error("Error:", err);
+      alert("Failed to add problem");
     }
   };
-  fetch();
-}, []);
 
-  const getSolvedCount = (sheetId) =>
-  problems.filter((p) => p.fromSheet === sheetId).length;
-
-  // ── SUBMIT HANDLER ────────────────────────────────────────────────────────
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!formName || !formDate) {
-    alert("Problem name and date are required.");
-    return;
-  }
-
-  try {
-    const newProblem = {
-      name: formName.trim(),
-      level: formLevel,
-      date: formDate,
-      note: formNote.trim(),
-      topic: formTopic,
-      fromSheet: null,
-      source: formSource,
-      platform: formPlatform,
-      link: formLink.trim(),
-    };
-    
-    await addProblem(newProblem);
-    setProblems([...problems, newProblem]);
-    if(onRefresh) await onRefresh();
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      setShowModal(false);
-      resetForm();
-    }, 1200);
-  } catch (err) {
-    alert("Failed to add problem");
-  }
-};
-
-
-
-  // ── RESET FORM ────────────────────────────────────────────────────────────
   const resetForm = () => {
     setFormName("");
     setFormLevel("Easy");
@@ -94,7 +69,6 @@ const handleSubmit = async (e) => {
     setFormLink("");
   };
 
-  // ── TOPIC OPTIONS ─────────────────────────────────────────────────────────
   const topics = [
     { value: "complexity", label: "Time & Space Complexity" },
     { value: "arrays", label: "Arrays" },
@@ -122,14 +96,8 @@ const handleSubmit = async (e) => {
   ];
 
   const platforms = [
-    "Codeforces",
-    "LeetCode",
-    "CodeChef",
-    "AtCoder",
-    "HackerRank",
-    "GeeksForGeeks",
-    "InterviewBit",
-    "Other",
+    "Codeforces", "LeetCode", "CodeChef", "AtCoder",
+    "HackerRank", "GeeksForGeeks", "InterviewBit", "Other",
   ];
 
   const inputCls = `
@@ -141,23 +109,13 @@ const handleSubmit = async (e) => {
   `;
 
   const diffStyle = {
-    Easy: {
-      on: "bg-green-500/20 text-green-400 border-green-500/40",
-      off: "text-gray-500 border-white/10 hover:border-white/20",
-    },
-    Medium: {
-      on: "bg-amber-500/20 text-amber-400 border-amber-500/40",
-      off: "text-gray-500 border-white/10 hover:border-white/20",
-    },
-    Hard: {
-      on: "bg-red-500/20 text-red-400 border-red-500/40",
-      off: "text-gray-500 border-white/10 hover:border-white/20",
-    },
+    Easy:   { on: "bg-green-500/20 text-green-400 border-green-500/40",  off: "text-gray-500 border-white/10 hover:border-white/20" },
+    Medium: { on: "bg-amber-500/20 text-amber-400 border-amber-500/40",  off: "text-gray-500 border-white/10 hover:border-white/20" },
+    Hard:   { on: "bg-red-500/20 text-red-400 border-red-500/40",        off: "text-gray-500 border-white/10 hover:border-white/20" },
   };
 
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col relative overflow-hidden">
-      {/* ── BACKGROUND GLOW ───────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-[28rem] h-[28rem] bg-indigo-500/10 blur-3xl rounded-full" />
         <div className="absolute bottom-0 right-0 w-[24rem] h-[24rem] bg-cyan-400/10 blur-3xl rounded-full" />
@@ -167,18 +125,13 @@ const handleSubmit = async (e) => {
       <Navbar />
 
       <main className="relative z-10 flex-1 px-6 lg:px-10 py-10 max-w-7xl mx-auto w-full">
-        {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
         <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
           <div>
             <p className="text-xs tracking-[0.25em] text-orange-300 uppercase mb-2 font-semibold">
               DSA Tracker
             </p>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
-              Practice Sheets
-            </h1>
-            <p className="text-slate-400 text-sm mt-2">
-              Pick a sheet and start solving
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">Practice Sheets</h1>
+            <p className="text-slate-400 text-sm mt-2">Pick a sheet and start solving</p>
           </div>
 
           <button
@@ -188,39 +141,25 @@ const handleSubmit = async (e) => {
                        transition-all duration-150 active:scale-95 shrink-0
                        shadow-[0_0_20px_rgba(249,115,22,0.3)]"
           >
-            <span className="text-base">+</span>
-            Log Problem
+            <span className="text-base">+</span> Log Problem
           </button>
         </div>
 
-        {/* ── CURRENT FOCUS STRIP ──────────────────────────────────────────── */}
-        <div className="mb-8 rounded-3xl border border-white/10 bg-white/[0.04]
-                        backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] p-5">
+        <div className="mb-8 rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] p-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-1">
-                Current Focus
-              </p>
-              <h2 className="text-lg font-semibold text-white">
-                {activeSheet.name}
-              </h2>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-1">Current Focus</p>
+              <h2 className="text-lg font-semibold text-white">{activeSheet.name}</h2>
               <p className="text-sm text-slate-400 mt-1">
                 {getSolvedCount(activeSheet.id)} of {activeSheet.totalProblems} solved
               </p>
             </div>
-
-            <span className="w-fit text-xs px-4 py-2 rounded-full border
-                             bg-orange-500/10 text-orange-300 border-orange-400/20
-                             shadow-[0_0_20px_rgba(251,146,60,0.08)]">
-              {Math.round(
-                (getSolvedCount(activeSheet.id) / activeSheet.totalProblems) * 100
-              )}
-              % complete
+            <span className="w-fit text-xs px-4 py-2 rounded-full border bg-orange-500/10 text-orange-300 border-orange-400/20">
+              {Math.round((getSolvedCount(activeSheet.id) / activeSheet.totalProblems) * 100)}% complete
             </span>
           </div>
         </div>
 
-        {/* ── SHEET CARDS ──────────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           {sheets.map((sheet) => (
             <SheetCard
@@ -233,137 +172,73 @@ const handleSubmit = async (e) => {
           ))}
         </div>
 
-        {/* ── ACTIVE SHEET HEADER ───────────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
           <div>
-            <h2 className="text-xl font-semibold text-white">
-              {activeSheet.name}
-            </h2>
-            <p className="text-sm text-slate-400 mt-1">
-              Explore problems and mark your progress sheet by sheet
-            </p>
+            <h2 className="text-xl font-semibold text-white">{activeSheet.name}</h2>
+            <p className="text-sm text-slate-400 mt-1">Explore problems and mark your progress sheet by sheet</p>
           </div>
-
-          <span className="w-fit text-xs px-3.5 py-1.5 rounded-full border
-                           bg-white/[0.04] text-slate-300 border-white/10">
+          <span className="w-fit text-xs px-3.5 py-1.5 rounded-full border bg-white/[0.04] text-slate-300 border-white/10">
             Total Problems: {activeSheet.totalProblems}
           </span>
         </div>
 
-        {/* ── PROBLEM TABLE ─────────────────────────────────────────────────── */}
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04]
-                        backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)]
-                        p-3 sm:p-4">
+        <div className="rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] p-3 sm:p-4">
           <ProblemTable
-            problems={activeSheet.problems.map((p) => ({
-              ...p,
-              fromSheet: activeSheet.id,
-            }))}
+            problems={activeSheet.problems.map((p) => ({ ...p, fromSheet: activeSheet.id }))}
           />
         </div>
       </main>
 
-      {/* ── LOG PROBLEM MODAL ─────────────────────────────────────────────── */}
       {showModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center
-                     bg-black/70 backdrop-blur-sm px-4"
-          onClick={() => {
-            setShowModal(false);
-            resetForm();
-          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
+          onClick={() => { setShowModal(false); resetForm(); }}
         >
           <div
-            className="relative w-full max-w-lg bg-[#0f172a] border border-white/10
-                       rounded-3xl shadow-[0_24px_60px_rgba(0,0,0,0.6)]
-                       max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-lg bg-[#0f172a] border border-white/10 rounded-3xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* ── MODAL HEADER ──────────────────────────────────────────── */}
             <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-white/10">
               <div>
-                <h2 className="text-base font-semibold text-white">
-                  Log a Problem
-                </h2>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Manually add a problem to your tracker
-                </p>
+                <h2 className="text-base font-semibold text-white">Log a Problem</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Manually add a problem to your tracker</p>
               </div>
-
               <button
-                onClick={() => {
-                  setShowModal(false);
-                  resetForm();
-                }}
-                className="w-8 h-8 flex items-center justify-center
-                           rounded-full bg-white/[0.06] hover:bg-white/10
-                           text-slate-400 hover:text-white transition-all text-lg"
-              >
-                ✕
-              </button>
+                onClick={() => { setShowModal(false); resetForm(); }}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/[0.06] hover:bg-white/10 text-slate-400 hover:text-white transition-all text-lg"
+              >✕</button>
             </div>
 
-            {/* ── FORM ──────────────────────────────────────────────────── */}
             <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
-              {/* manual log info strip */}
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl
-                              bg-orange-500/10 border border-orange-500/20">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-orange-500/10 border border-orange-500/20">
                 <span className="text-orange-400 text-xs">📌</span>
-                <span className="text-xs text-orange-300">
-                  This problem will be added to your tracker only
-                </span>
+                <span className="text-xs text-orange-300">This problem will be added to your tracker only</span>
               </div>
 
-              {/* ── PROBLEM NAME ────────────────────────────────────────── */}
               <div>
                 <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                   Problem Name <span className="text-red-400">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
-                  placeholder="e.g. Longest Substring Without Repeating"
-                  className={inputCls}
-                />
+                <input type="text" value={formName} onChange={(e) => setFormName(e.target.value)}
+                  placeholder="e.g. Longest Substring Without Repeating" className={inputCls} />
               </div>
 
-              {/* ── DIFFICULTY PILLS ────────────────────────────────────── */}
               <div>
-                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                  Difficulty
-                </label>
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Difficulty</label>
                 <div className="flex gap-2">
                   {["Easy", "Medium", "Hard"].map((lvl) => (
-                    <button
-                      key={lvl}
-                      type="button"
-                      onClick={() => setFormLevel(lvl)}
-                      className={`flex-1 py-2 rounded-xl text-xs font-medium border
-                                  transition-all duration-150 active:scale-95
-                                  ${
-                                    formLevel === lvl
-                                      ? diffStyle[lvl].on
-                                      : diffStyle[lvl].off
-                                  }`}
-                    >
+                    <button key={lvl} type="button" onClick={() => setFormLevel(lvl)}
+                      className={`flex-1 py-2 rounded-xl text-xs font-medium border transition-all duration-150 active:scale-95 ${formLevel === lvl ? diffStyle[lvl].on : diffStyle[lvl].off}`}>
                       {lvl}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* ── SOURCE + PLATFORM ───────────────────────────────────── */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                    Source
-                  </label>
-                  <select
-                    value={formSource}
-                    onChange={(e) => setFormSource(e.target.value)}
-                    className={inputCls}
-                  >
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Source</label>
+                  <select value={formSource} onChange={(e) => setFormSource(e.target.value)} className={inputCls}>
                     <option value="contest">Contest</option>
                     <option value="practice">Practice</option>
                     <option value="interview">Mock Interview</option>
@@ -371,103 +246,47 @@ const handleSubmit = async (e) => {
                     <option value="other">Other</option>
                   </select>
                 </div>
-
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                    Platform
-                  </label>
-                  <select
-                    value={formPlatform}
-                    onChange={(e) => setFormPlatform(e.target.value)}
-                    className={inputCls}
-                  >
-                    {platforms.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Platform</label>
+                  <select value={formPlatform} onChange={(e) => setFormPlatform(e.target.value)} className={inputCls}>
+                    {platforms.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
               </div>
 
-              {/* ── DATE + TOPIC ────────────────────────────────────────── */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                     Date <span className="text-red-400">*</span>
                   </label>
-                  <input
-                    type="date"
-                    value={formDate}
-                    onChange={(e) => setFormDate(e.target.value)}
-                    className={inputCls}
-                  />
+                  <input type="date" value={formDate} onChange={(e) => setFormDate(e.target.value)} className={inputCls} />
                 </div>
-
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                    Topic
-                  </label>
-                  <select
-                    value={formTopic}
-                    onChange={(e) => setFormTopic(e.target.value)}
-                    className={inputCls}
-                  >
-                    {topics.map((t) => (
-                      <option
-                        key={t.value}
-                        value={t.value}
-                        className="bg-slate-900"
-                      >
-                        {t.label}
-                      </option>
-                    ))}
+                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Topic</label>
+                  <select value={formTopic} onChange={(e) => setFormTopic(e.target.value)} className={inputCls}>
+                    {topics.map((t) => <option key={t.value} value={t.value} className="bg-slate-900">{t.label}</option>)}
                   </select>
                 </div>
               </div>
 
-              {/* ── PROBLEM LINK ────────────────────────────────────────── */}
               <div>
                 <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                  Problem Link
-                  <span className="text-slate-600 normal-case ml-1">
-                    (optional)
-                  </span>
+                  Problem Link <span className="text-slate-600 normal-case ml-1">(optional)</span>
                 </label>
-                <input
-                  type="url"
-                  value={formLink}
-                  onChange={(e) => setFormLink(e.target.value)}
-                  placeholder="https://codeforces.com/..."
-                  className={inputCls}
-                />
+                <input type="url" value={formLink} onChange={(e) => setFormLink(e.target.value)}
+                  placeholder="https://codeforces.com/..." className={inputCls} />
               </div>
 
-              {/* ── NOTE ───────────────────────────────────────────────── */}
               <div>
                 <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
-                  Note
-                  <span className="text-slate-600 normal-case ml-1">
-                    (optional)
-                  </span>
+                  Note <span className="text-slate-600 normal-case ml-1">(optional)</span>
                 </label>
-                <input
-                  type="text"
-                  value={formNote}
-                  onChange={(e) => setFormNote(e.target.value)}
-                  placeholder="Approach used, key insight, time taken..."
-                  className={inputCls}
-                />
+                <input type="text" value={formNote} onChange={(e) => setFormNote(e.target.value)}
+                  placeholder="Approach used, key insight, time taken..." className={inputCls} />
               </div>
 
-              {/* ── SUBMIT ──────────────────────────────────────────────── */}
-              <button
-                type="submit"
-                className="w-full py-3 rounded-2xl text-sm font-semibold
-                           bg-orange-500 hover:bg-orange-400 text-white
-                           transition-all duration-150 active:scale-[0.98]
-                           shadow-[0_0_20px_rgba(249,115,22,0.25)]"
-              >
+              <button type="submit"
+                className="w-full py-3 rounded-2xl text-sm font-semibold bg-orange-500 hover:bg-orange-400 text-white transition-all duration-150 active:scale-[0.98] shadow-[0_0_20px_rgba(249,115,22,0.25)]">
                 {showSuccess ? "Added! ✓" : "Log Problem →"}
               </button>
             </form>

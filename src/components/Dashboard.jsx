@@ -1,9 +1,12 @@
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import sheets from "../data/sheets";
-
-function Dashboard({ problems, setProblems }) {
+import { useEffect } from "react";
+function Dashboard({ problems, onRefresh }) {
   const navigate = useNavigate();
+  useEffect(() => {
+    onRefresh();
+  }, []); // sirf mount pe ek baar
 
   // ── HARD PROBLEMS ─────────────────────────────────────────────────────────
   const hardproblems = problems.filter((problem) => {
@@ -102,8 +105,6 @@ function Dashboard({ problems, setProblems }) {
 const recentProblems = [...problems]
   .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
   .slice(0, 5);
-console.log("All problems:", problems);
-console.log("Recent problems:", recentProblems);
 
   // Accent color map → Tailwind classes per card
   const accentClasses = {

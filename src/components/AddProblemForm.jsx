@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { addProblem } from "../services/api";
 
-function AddProblemForm({ problems, setProblems }) {
+function AddProblemForm({ onRefresh }) {
 
   const [name,  setName]  = useState("");
   const [level, setLevel] = useState("Easy");
@@ -26,9 +26,9 @@ function AddProblemForm({ problems, setProblems }) {
     };
 
     try {
-      // Call API instead of localStorage
-      const savedProblem = await addProblem(newProblem);
-      setProblems([...problems, savedProblem]);
+  
+  await addProblem(newProblem);
+await onRefresh(); // App.jsx se fresh data fetch hoga
       
       // Reset form
       setName("");
