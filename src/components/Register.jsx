@@ -33,7 +33,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 px-4 font-sans">
+    <div className="flex min-h-screen items-center justify-center bg-[#030712] px-4 font-sans">
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-md">
         
         {/* Header */}
