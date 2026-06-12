@@ -1,145 +1,212 @@
-# 🚀 DSA Prep Dashboard
+# PrepTrack | Interview & DSA Prep Dashboard
 
-A modern **DSA tracking and analytics dashboard** built using React to help maintain consistency, track progress, and improve problem-solving during technical interview preparation.
-
-🔗 **Live Demo:** https://dsa-prep-dashboard.vercel.app/
+PrepTrack is a premium, full-stack Data Structures, Algorithms, and Interview Preparation tracking platform. Built with an ultra-modern dark glassmorphism interface, it helps software engineering candidates streamline their coding journey, track problem-solving streaks, and analyze platform engagement metrics in a centralized, secure repository.
 
 ---
 
-## 📌 Overview
+## 🎨 Core Highlights
 
-This project helps users track their DSA journey in a structured and visual way.
-
-It provides:
-- Streak tracking for consistency 🔥  
-- Weekly analytics for performance 📊  
-- Topic-wise and difficulty-wise insights  
-- Sheet-based structured preparation  
-
-The goal is to make DSA preparation **data-driven, consistent, and motivating**.
-
-> Designed as a foundation for integrating AI-based preparation strategies in future versions.
+* **Sleek Dark UI:** Beautifully crafted layout utilizing dark mode glassmorphism components with neon Indigo and Cyan accents.
+* **Secure Authentication Pipeline:** Rock-solid signup and login flows protected by custom JWT authorization middleware.
+* **Separation of Concerns:** Backend structured systematically following the MVC architecture pattern.
+* **Real-Time Analytics:** Embedded visitor tracking and engagement monitoring.
+* **Intuitive User Flows:** Logout confirmation modal, password visibility toggles, and protected routes.
 
 ---
 
-## ✨ Features
+## 💻 Tech Stack
 
-### 📊 Dashboard
-- Total problems solved
-- Weekly progress overview
-- Current streak display
-- Hard problem tracking
-
-### 🔥 Streak System
-- Current streak calculation
-- Longest streak tracking
-- Last 30 days activity consistency
-- Topic-wise problem distribution
-- Difficulty breakdown (Easy / Medium / Hard)
-
-### 📅 Weekly Analytics
-- Problems solved per day (bar chart)
-- Difficulty distribution (pie chart)
-- Last 7 days performance tracking
-
-### 📘 Sheet-Based Practice
-- Practice problems from sheets (Striver etc.)
-- Track solved problems per sheet
-- Completion percentage tracking
-
-### 📚 Problem Management
-- Add solved problems with:
-  - Name
-  - Difficulty
-  - Topic
-  - Date
-  - Notes
-- Search and filter problems
-- View complete problem history
-
-### 💾 Data Persistence
-- Uses browser localStorage
-- Data remains even after refresh
-
-### 🎨 UI/UX
-- Premium dark theme
-- Glassmorphism-inspired design
-- Smooth transitions and hover effects
-- Responsive layout
+| Layer        | Technologies Used                                        |
+| ------------ | -------------------------------------------------------- |
+| **Frontend** | React.js, Tailwind CSS, React Router v6, Recharts, Axios |
+| **Backend**  | Node.js, Express.js, JWT Authentication                  |
+| **Database** | MongoDB Atlas                                            |
+| **Hosting**  | Render (Backend), Vercel (Frontend)                      |
 
 ---
 
-## 📸 Screenshots
+# 📐 System Architecture & Data Flow
 
-### 🧠 Dashboard
-<img width="3839" height="2145" alt="Screenshot 2026-04-02 121745" src="https://github.com/user-attachments/assets/3adb27db-d7e3-4528-83e7-78233e7b6239" />
+PrepTrack follows a decoupled **Client-Server Architecture** structured around the **MVC (Model-View-Controller)** design pattern.
 
-
----
-
-### 📘 Sheets Page
-
-<img width="3833" height="2136" alt="Screenshot 2026-04-02 122259" src="https://github.com/user-attachments/assets/77e5b55f-872f-478c-aa55-674e8861bc9f" />
-
-
----
-
-### 📊 Weekly Analytics
-<img width="3837" height="2142" alt="Screenshot 2026-04-02 122324" src="https://github.com/user-attachments/assets/56806bb4-5604-40bf-b6f8-87efba6943b5" />
-
-
-
----
-
-### 🔥 Streak Page
-
-<img width="3830" height="2143" alt="Screenshot 2026-04-02 122351" src="https://github.com/user-attachments/assets/6d97e70e-df5b-4bc2-b38d-8f794139f712" />
-)
-
-
----
-
-### 📚 Problems Page
-
-<img width="3837" height="2143" alt="Screenshot 2026-04-02 123204" src="https://github.com/user-attachments/assets/7b7078f0-7ef3-48d2-8a5b-936531698be9" />
-
-
+```text
+┌────────────────────────────────────────────────────────┐
+│                   FRONTEND (Client)                    │
+│  [React.js + Vite] ── Deployed on Vercel               │
+│                                                        │
+│ Components (Dashboard, Problems, Sheets, Navbar)       │
+│                          │                             │
+│              State Management / Axios Requests         │
+└──────────────────────────┼─────────────────────────────┘
+                           │
+                    HTTPS REST Calls
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│                   BACKEND (Server)                     │
+│  [Node.js + Express.js] ── Deployed on Render          │
+│                                                        │
+│  Routes → Middleware → Controllers → Models           │
+└──────────────────────────┼─────────────────────────────┘
+                           │
+                    Mongoose ODM
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│                   DATABASE (Cloud)                     │
+│                 MongoDB Atlas Cluster                  │
+└────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 🛠 Tech Stack
+# 🧩 Component Hierarchy
 
-- React (Vite)
-- Tailwind CSS
-- Recharts
-- React Router
-- JavaScript (ES6)
-- LocalStorage
+```text
+main.jsx
+│
+└── App.jsx
+    │
+    ├── Public Routes
+    │   ├── Login
+    │   └── Register
+    │
+    └── Protected Routes
+        │
+        └── ProtectedRoute
+            │
+            ├── Navbar
+            │
+            ├── Dashboard
+            │   ├── StatsCard
+            │   ├── Streak
+            │   ├── Weekly Progress
+            │   └── AddProblemForm
+            │
+            ├── ProblemsPage
+            │   └── ProblemTable
+            │
+            └── Sheets
+                ├── SheetBrowser
+                ├── SheetCard
+                └── Hard.jsx
+```
 
 ---
 
-## 🏗 Architecture Overview
+# 📂 Folder Structure
 
-```bash
-src/
-  assets/                  # Static assets (images, icons)
+```text
+PrepTrack
+│
+├── backend
+│   ├── controllers
+│   │   └── authController.js
+│   │
+│   ├── middleware
+│   │   └── auth.js
+│   │
+│   ├── Models
+│   │   ├── UserModel.js
+│   │   └── Problem.js
+│   │
+│   ├── routes
+│   │   ├── authroutes.js
+│   │   └── problems.js
+│   │
+│   ├── package.json
+│   └── server.js
+│
+├── public
+│   ├── logo.svg
+│   └── favicon.svg
+│
+└── src
+    ├── components
+    │   ├── Dashboard.jsx
+    │   ├── ProblemTable.jsx
+    │   ├── SheetCard.jsx
+    │   ├── Navbar.jsx
+    │   └── ProtectedRoute.jsx
+    │
+    ├── services
+    │   ├── api.js
+    │   └── authService.js
+    │
+    ├── App.jsx
+    └── main.jsx
+```
 
-  components/              # Reusable UI components
-    AddProblemForm.jsx     # Form to add solved problems
-    Dashboard.jsx          # Main dashboard page
-    Navbar.jsx             # Navigation bar
-    Problemspage.jsx       # Problem history page
-    ProblemTable.jsx       # Table for displaying problems
-    SheetBrowser.jsx       # Sheet selection page
-    SheetCard.jsx          # Individual sheet card
-    StatsCard.jsx          # Dashboard stat cards
-    Streak.jsx             # Streak tracking and analytics
-    Weekly.jsx             # Weekly performance charts
-    Hard.jsx               # (To be replaced with AI feature)
+---
 
-  data/                    # Sheet/problem data
+# 🔐 Authentication Flow
 
-  App.jsx                  # Root component
-  main.jsx                 # React entry point
-  index.css                # Global styles
-  App.css                  # Additional styles
+```text
+User Login/Register
+        │
+        ▼
+Frontend Form
+        │
+        ▼
+Axios Request
+        │
+        ▼
+Express Route
+        │
+        ▼
+Controller Logic
+        │
+        ▼
+MongoDB Validation
+        │
+        ▼
+JWT Token Generated
+        │
+        ▼
+Stored in LocalStorage
+        │
+        ▼
+Protected Route Access
+```
+
+---
+
+# 📊 Features
+
+* User Authentication (JWT)
+* Protected Routes
+* DSA Problem Tracking
+* Coding Sheet Management
+* Topic-wise Problem Segregation
+* Daily Streak Tracking
+* Weekly Progress Analytics
+* Recharts Visualizations
+* Responsive UI
+* Dark Glassmorphism Design
+* Logout Confirmation Modal
+
+---
+
+# 🚀 Future Enhancements
+
+* AI-Powered Problem Recommendations
+* Contest Tracking
+* LeetCode API Integration
+* GitHub Profile Analytics
+* Interview Preparation Roadmap
+* Personalized Performance Insights
+
+---
+
+## 🌐 Deployment
+
+* **Frontend:** Vercel
+* **Backend:** Render
+* **Database:** MongoDB Atlas
+
+---
+
+## 📜 License
+
+This project is developed for learning, portfolio building, and interview preparation purposes.
+
+
+
