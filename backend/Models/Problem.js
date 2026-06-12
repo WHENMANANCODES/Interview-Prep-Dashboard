@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const problemSchema = new mongoose.Schema({
-  // 🎯 NEW: Yeh field har problem ko ek specific user ke account se bandh degi!
+  // NEW: Yeh field har problem ko ek specific user ke account se bandh degi!
   user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
