@@ -119,7 +119,7 @@ function Navbar() {
                 onClick={() => setShowConfirm(false)}
                 className="w-24 py-2 text-sm font-semibold text-slate-300 rounded-xl bg-white/[0.05] border border-white/10 hover:bg-white/10 transition"
               >
-                
+                No
               </button>
               {/* Confirm Destruction Button */}
               <button
